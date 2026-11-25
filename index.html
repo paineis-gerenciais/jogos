@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jogar e aprender</title>
+<meta name="description" content="Menu de jogos e modelos de ciência.">
+<link rel="icon" href="data:,">
+<style>
+  /* ---------- Arte: troque aqui quando as imagens chegarem (ver README) ---------- */
+  :root {
+    --fundo: none;                 /* depois: url("assets/fundo.webp") */
+    --veu: rgba(255, 255, 255, .62); /* véu claro por cima da imagem de fundo */
+    --base: #eef0fa;              /* cor do fundo enquanto não há imagem */
+    --mancha-1: rgba(47, 69, 184, .16);
+    --mancha-2: rgba(212, 162, 76, .18);
+    --texto: #2b2530;
+    --texto-suave: #5d5563;
+    --ouro-claro: #f6dc9a;
+    --ouro: #d4a24c;
+    --ouro-escuro: #8a5f14;
+  }
+  /* ---------- Cores de cada família de botão ---------- */
+  .vinho { --escuro: #4f0505; --medio: #a41414; --sombra: rgba(139, 10, 10, .32); }
+  .azul  { --escuro: #111a55; --medio: #2f45b8; --sombra: rgba(32, 48, 150, .32); }
+  .verde { --escuro: #073f31; --medio: #12825f; --sombra: rgba(10, 100, 72, .32); }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    min-height: 100vh;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    color: var(--texto);
+    background: var(--base);
+    display: flex;
+    flex-direction: column;
+  }
+  /* Fundo fixo em camada própria (background-attachment: fixed falha no iOS) */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background:
+      linear-gradient(var(--veu), var(--veu)),
+      var(--fundo) center / cover no-repeat,
+      radial-gradient(60% 55% at 12% 8%, var(--mancha-1), transparent 70%),
+      radial-gradient(55% 60% at 92% 96%, var(--mancha-2), transparent 70%),
+      var(--base);
+  }
+  .voltar {
+    position: absolute; top: 16px; left: 16px;
+    display: inline-flex; align-items: center; min-height: 44px; padding: 8px 18px;
+    font-weight: 600; font-size: 15px; text-decoration: none; color: var(--texto);
+    background: rgba(255, 255, 255, .78);
+    border: 2px solid var(--ouro); border-radius: 999px;
+  }
+  .voltar:hover { background: #fff; }
+  header { text-align: center; padding: 44px 16px 10px; }
+  .simbolo { display: block; width: 132px; height: 132px; margin: 0 auto 10px; object-fit: contain; }
+  .sobretitulo {
+    margin: 0 0 4px; font-size: 14px; font-weight: 700; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--ouro-escuro);
+  }
+  h1 { margin: 0; font-size: clamp(28px, 5vw, 44px); font-weight: 800; letter-spacing: -.01em; text-wrap: balance; }
+  .chamada { margin: 8px auto 0; max-width: 34em; font-size: 17px; color: var(--texto-suave); text-wrap: pretty; }
+  main { flex: 1; padding: 22px 16px 44px; }
+  .grade {
+    list-style: none; margin: 0 auto; padding: 0; max-width: 1180px;
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 18px 22px;
+  }
+  .grade li { width: min(372px, 100%); }
+
+  /* ---------- Botão (mesma anatomia dos botões dos Painéis: ícone | traço | nome) ---------- */
+  .botao {
+    position: relative; overflow: hidden;
+    display: flex; align-items: center; gap: 16px;
+    min-height: 112px; padding: 16px 22px 16px 16px;
+    border: 2px solid transparent; border-radius: 20px;
+    color: #fff; text-decoration: none;
+    background:
+      linear-gradient(135deg, var(--escuro) 0%, var(--medio) 46%, var(--escuro) 100%) padding-box,
+      linear-gradient(135deg, var(--ouro-claro), #a87722 45%, var(--ouro-claro) 100%) border-box;
+    box-shadow: 0 8px 18px var(--sombra), inset 0 1px 0 rgba(255, 255, 255, .28);
+    transition: transform .18s ease, filter .18s ease;
+  }
+  /* Brilho no alto e arco dourado no canto, como na arte dos Painéis */
+  .botao::before {
+    content: ""; position: absolute; inset: 0 0 52% 0;
+    background: linear-gradient(rgba(255, 255, 255, .16), rgba(255, 255, 255, 0));
+    pointer-events: none;
+  }
+  .botao::after {
+    content: ""; position: absolute; right: -150px; bottom: -262px;
+    width: 300px; height: 300px; border-radius: 50%;
+    border: 3px solid rgba(246, 220, 154, .7);
+    box-shadow: 0 0 16px rgba(246, 220, 154, .4);
+    pointer-events: none;
+  }
+  .botao:hover { transform: translateY(-3px) scale(1.02); filter: brightness(1.1); }
+  .botao:active { transform: translateY(0) scale(.99); }
+  .botao:focus-visible, .voltar:focus-visible { outline: 3px solid var(--texto); outline-offset: 3px; }
+  .icone {
+    flex: none; display: grid; place-items: center;
+    width: 76px; height: 76px; border-radius: 14px;
+    border: 1.5px solid rgba(246, 220, 154, .85);
+    background: rgba(0, 0, 0, .24);
+    color: var(--ouro-claro);
+  }
+  .icone svg { width: 46px; height: 46px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  .icone .cheio { fill: currentColor; stroke: none; }
+  .traco { flex: none; align-self: stretch; width: 1.5px; margin: 6px 0; background: linear-gradient(transparent, var(--ouro-claro), transparent); }
+  .rotulo { position: relative; z-index: 1; display: flex; flex-direction: column; min-width: 0; line-height: 1.12; }
+  .linha { font-size: 16px; font-weight: 600; color: rgba(255, 255, 255, .95); }
+  .nome {
+    font-size: 29px; font-weight: 800; letter-spacing: -.01em; color: var(--ouro-claro);
+    text-shadow: 0 2px 3px rgba(0, 0, 0, .35);
+  }
+  footer { text-align: center; font-size: 13px; padding: 0 16px 20px; color: var(--texto-suave); }
+
+  @media (max-width: 560px) {
+    header { padding-top: 76px; }
+    .simbolo { width: 104px; height: 104px; }
+    .grade { gap: 12px; }
+    .botao { min-height: 96px; }
+    .icone { width: 64px; height: 64px; }
+    .icone svg { width: 38px; height: 38px; }
+    .nome { font-size: 25px; }
+  }
+  @media (prefers-reduced-motion: reduce) { .botao { transition: none; } }
+</style>
+</head>
+<body>
+<a class="voltar" href="../geral/">← Menu geral</a>
+<header>
+  <!-- Símbolo provisório em código. Com a arte pronta, troque este <svg> por:
+       <img class="simbolo" src="assets/simbolo.webp" width="512" height="512" alt=""> -->
+  <svg class="simbolo" viewBox="0 0 120 120" aria-hidden="true">
+    <defs><linearGradient id="ouro" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f6dc9a"/><stop offset=".5" stop-color="#a87722"/><stop offset="1" stop-color="#f6dc9a"/></linearGradient><linearGradient id="cor" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2f45b8"/><stop offset="1" stop-color="#111a55"/></linearGradient></defs>
+    <rect x="24" y="24" width="72" height="72" rx="17" fill="url(#cor)" stroke="url(#ouro)" stroke-width="5" transform="rotate(-8 60 60)"/>
+    <g fill="#f6dc9a" transform="rotate(-8 60 60)"><circle cx="44" cy="44" r="6"/><circle cx="76" cy="44" r="6"/><circle cx="60" cy="60" r="6"/><circle cx="44" cy="76" r="6"/><circle cx="76" cy="76" r="6"/></g>
+    <ellipse cx="60" cy="60" rx="55" ry="16" fill="none" stroke="url(#ouro)" stroke-width="3" transform="rotate(-24 60 60)"/>
+    <circle cx="109" cy="37" r="5" fill="#d4a24c"/>
+  </svg>
+  <h1>Jogar e aprender</h1>
+  <p class="chamada">Jogos e modelos de ciência. Abrem direto no navegador.</p>
+</header>
+<main>
+  <nav aria-label="Jogos">
+    <ul class="grade">
+      <li><a class="botao azul" href="../fa-manager/" target="_blank" rel="noopener" aria-label="FA Manager: jogo de gerenciamento de futebol americano (abre em nova aba)"><span class="icone"><svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="12" rx="9.4" ry="5.6" transform="rotate(-38 12 12)"/><path d="M9.2 14.8l5.6-5.6M10 12.4l1.6 1.6M11.6 10.8l1.6 1.6M13.2 9.2l.8.8"/></svg></span><span class="traco"></span><span class="rotulo"><span class="linha">Futebol americano</span><span class="nome">FA Manager</span></span></a></li>
+      <li><a class="botao azul" href="../torres-do-reino/" target="_blank" rel="noopener" aria-label="Torres do Reino: jogo de defesa de torres (abre em nova aba)"><span class="icone"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h2.4v2h2.2V4h2.8v2h2.2V4H18v5l-1.5 1.5V21h-9V10.5L6 9z"/><path d="M10.5 21v-3.6a1.5 1.5 0 0 1 3 0V21"/></svg></span><span class="traco"></span><span class="rotulo"><span class="linha">Defesa de torres</span><span class="nome">Torres do Reino</span></span></a></li>
+      <li><a class="botao azul" href="../quadra/" target="_blank" rel="noopener" aria-label="Quadra: jogo diário de grupos de palavras (abre em nova aba)"><span class="icone"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.8"/><rect class="cheio" x="13" y="4" width="7" height="7" rx="1.8"/><rect class="cheio" x="4" y="13" width="7" height="7" rx="1.8"/><rect x="13" y="13" width="7" height="7" rx="1.8"/></svg></span><span class="traco"></span><span class="rotulo"><span class="linha">Palavras do dia</span><span class="nome">Quadra</span></span></a></li>
+      <li><a class="botao azul" href="../orbitas/" target="_blank" rel="noopener" aria-label="Órbitas: modelo 3D do sistema solar (abre em nova aba)"><span class="icone"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><ellipse cx="12" cy="12" rx="10.2" ry="3.7" transform="rotate(-22 12 12)"/><circle class="cheio" cx="20" cy="6.4" r="1.2"/></svg></span><span class="traco"></span><span class="rotulo"><span class="linha">Sistema solar em 3D</span><span class="nome">Órbitas</span></span></a></li>
+      <!-- Novos jogos entram aqui: copie uma linha <li> acima e troque ícone, textos e endereço -->
+    </ul>
+  </nav>
+</main>
+<footer>Jogar e aprender</footer>
+</body>
+</html>
