@@ -10,6 +10,7 @@ A capa que leva a este menu fica em https://paineis-gerenciais.github.io/geral/ 
 
 - `index.html` — o menu (HTML + CSS, sem JavaScript). Os botões e o símbolo são feitos em código, não em imagem.
 - `favicon.svg` — ícone da aba do navegador.
+- `marca/` — a marca deste menu: símbolo, assinaturas, ícones, cores e folha da marca.
 - `assets/` — criar se for usar imagem de fundo (`fundo.webp`). O prompt está em `ARTE.md`, no repositório `geral`.
 
 ## Adicionar ou tirar um jogo
