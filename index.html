@@ -5,25 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Jogar e aprender</title>
 <meta name="description" content="Menu de jogos e modelos de ciência.">
-<link rel="icon" href="data:,">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
 <style>
-  /* ---------- Arte: troque aqui quando as imagens chegarem (ver README) ---------- */
+  /* ---------- Fundo: troque aqui quando a imagem chegar (ver README) ---------- */
   :root {
-    --fundo: none;                 /* depois: url("assets/fundo.webp") */
-    --veu: rgba(255, 255, 255, .62); /* véu claro por cima da imagem de fundo */
-    --base: #eef0fa;              /* cor do fundo enquanto não há imagem */
-    --mancha-1: rgba(47, 69, 184, .16);
-    --mancha-2: rgba(212, 162, 76, .18);
-    --texto: #2b2530;
-    --texto-suave: #5d5563;
-    --ouro-claro: #f6dc9a;
-    --ouro: #d4a24c;
-    --ouro-escuro: #8a5f14;
+    --fundo: url("assets/fundo.webp");  /* imagem de fundo; troque por "none" para voltar ao marfim liso */
+    --veu: rgba(246, 243, 238, .3);   /* véu marfim por cima da imagem; aumente o último número para clarear */
+    --base: #f6f3ee;                  /* marfim */
+    --texto: #24272e;                 /* grafite */
+    --texto-suave: #6b6f78;
+    --linha-fina: #e2ddd5;
+    --ouro: #b0904f;
   }
-  /* ---------- Cores de cada família de botão ---------- */
-  .vinho { --escuro: #4f0505; --medio: #a41414; --sombra: rgba(139, 10, 10, .32); }
-  .azul  { --escuro: #111a55; --medio: #2f45b8; --sombra: rgba(32, 48, 150, .32); }
-  .verde { --escuro: #073f31; --medio: #12825f; --sombra: rgba(10, 100, 72, .32); }
+  /* ---------- Cor de cada família ---------- */
+  .vinho { --cor: #6e1420; }
+  .azul  { --cor: #23346b; }
+  .verde { --cor: #1f5244; }
 
   * { box-sizing: border-box; }
   html, body { margin: 0; }
@@ -41,105 +38,81 @@
     position: fixed;
     inset: 0;
     z-index: -1;
-    background:
-      linear-gradient(var(--veu), var(--veu)),
-      var(--fundo) center / cover no-repeat,
-      radial-gradient(60% 55% at 12% 8%, var(--mancha-1), transparent 70%),
-      radial-gradient(55% 60% at 92% 96%, var(--mancha-2), transparent 70%),
-      var(--base);
+    background: linear-gradient(var(--veu), var(--veu)), var(--fundo) center / cover no-repeat, var(--base);
   }
   .voltar {
     position: absolute; top: 16px; left: 16px;
-    display: inline-flex; align-items: center; min-height: 44px; padding: 8px 18px;
+    display: inline-flex; align-items: center; min-height: 44px; padding: 8px 16px;
     font-weight: 600; font-size: 15px; text-decoration: none; color: var(--texto);
-    background: rgba(255, 255, 255, .78);
-    border: 2px solid var(--ouro); border-radius: 999px;
+    background: #fff; border: 1px solid var(--linha-fina); border-radius: 8px;
   }
-  .voltar:hover { background: #fff; }
-  header { text-align: center; padding: 44px 16px 10px; }
-  .simbolo { display: block; width: 132px; height: 132px; margin: 0 auto 10px; object-fit: contain; }
+  .voltar:hover { border-color: var(--texto); }
+  header { text-align: center; padding: 48px 16px 12px; }
+  .simbolo { display: block; width: 84px; height: 84px; margin: 0 auto 18px; }
+  .marca { display: block; width: min(330px, 78vw); height: auto; margin: 0 auto; }
+  .oculto { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   .sobretitulo {
-    margin: 0 0 4px; font-size: 14px; font-weight: 700; letter-spacing: .14em;
-    text-transform: uppercase; color: var(--ouro-escuro);
+    margin: 0 0 6px; font-size: 13px; font-weight: 700; letter-spacing: .16em;
+    text-transform: uppercase; color: var(--texto-suave);
   }
-  h1 { margin: 0; font-size: clamp(28px, 5vw, 44px); font-weight: 800; letter-spacing: -.01em; text-wrap: balance; }
+  h1 { margin: 0; font-size: clamp(27px, 4.6vw, 40px); font-weight: 700; letter-spacing: -.015em; text-wrap: balance; }
   .chamada { margin: 8px auto 0; max-width: 34em; font-size: 17px; color: var(--texto-suave); text-wrap: pretty; }
-  main { flex: 1; padding: 22px 16px 44px; }
+  main { flex: 1; padding: 26px 16px 48px; }
   .grade {
     list-style: none; margin: 0 auto; padding: 0; max-width: 1180px;
-    display: flex; flex-wrap: wrap; justify-content: center; gap: 18px 22px;
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 16px 20px;
   }
-  .grade li { width: min(372px, 100%); }
+  .grade li { width: min(372px, 100%); display: flex; }
 
-  /* ---------- Botão (mesma anatomia dos botões dos Painéis: ícone | traço | nome) ---------- */
+  /* ---------- Botão: cartão branco com um bloco de cor (como os blocos da marca) ---------- */
   .botao {
-    position: relative; overflow: hidden;
+    position: relative; flex: 1;
     display: flex; align-items: center; gap: 16px;
-    min-height: 112px; padding: 16px 22px 16px 16px;
-    border: 2px solid transparent; border-radius: 20px;
-    color: #fff; text-decoration: none;
-    background:
-      linear-gradient(135deg, var(--escuro) 0%, var(--medio) 46%, var(--escuro) 100%) padding-box,
-      linear-gradient(135deg, var(--ouro-claro), #a87722 45%, var(--ouro-claro) 100%) border-box;
-    box-shadow: 0 8px 18px var(--sombra), inset 0 1px 0 rgba(255, 255, 255, .28);
-    transition: transform .18s ease, filter .18s ease;
+    min-height: 92px; padding: 12px 18px 12px 12px;
+    background: #fff; border: 1px solid var(--linha-fina); border-radius: 12px;
+    color: var(--texto); text-decoration: none;
+    box-shadow: 0 1px 2px rgba(36, 39, 46, .05);
+    transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
   }
-  /* Brilho no alto e arco dourado no canto, como na arte dos Painéis */
-  .botao::before {
-    content: ""; position: absolute; inset: 0 0 52% 0;
-    background: linear-gradient(rgba(255, 255, 255, .16), rgba(255, 255, 255, 0));
-    pointer-events: none;
-  }
-  .botao::after {
-    content: ""; position: absolute; right: -150px; bottom: -262px;
-    width: 300px; height: 300px; border-radius: 50%;
-    border: 3px solid rgba(246, 220, 154, .7);
-    box-shadow: 0 0 16px rgba(246, 220, 154, .4);
-    pointer-events: none;
-  }
-  a.botao:hover { transform: translateY(-3px) scale(1.02); filter: brightness(1.1); }
-  a.botao:active { transform: translateY(0) scale(.99); }
-  .botao:focus-visible, .voltar:focus-visible { outline: 3px solid var(--texto); outline-offset: 3px; }
+  a.botao:hover { transform: translateY(-2px); border-color: var(--cor); box-shadow: 0 8px 18px rgba(36, 39, 46, .12); }
+  a.botao:active { transform: translateY(0); }
+  .botao:focus-visible, .voltar:focus-visible { outline: 3px solid var(--ouro); outline-offset: 3px; }
   .icone {
     flex: none; display: grid; place-items: center;
-    width: 76px; height: 76px; border-radius: 14px;
-    border: 1.5px solid rgba(246, 220, 154, .85);
-    background: rgba(0, 0, 0, .24);
-    color: var(--ouro-claro);
+    width: 68px; height: 68px; border-radius: 8px;
+    background: var(--cor); color: #fff;
   }
-  .icone svg { width: 46px; height: 46px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  .icone svg { width: 38px; height: 38px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
   .icone .cheio { fill: currentColor; stroke: none; }
-  .traco { flex: none; align-self: stretch; width: 1.5px; margin: 6px 0; background: linear-gradient(transparent, var(--ouro-claro), transparent); }
-  .rotulo { position: relative; z-index: 1; display: flex; flex-direction: column; min-width: 0; line-height: 1.12; }
-  .linha { font-size: 16px; font-weight: 600; color: rgba(255, 255, 255, .95); }
-  .nome {
-    font-size: 29px; font-weight: 800; letter-spacing: -.01em; color: var(--ouro-claro);
-    text-shadow: 0 2px 3px rgba(0, 0, 0, .35);
-  }
-  .nome.longo { font-size: 24px; }
-  /* ---------- Em breve: botão sem clique, em cor apagada, com selo ---------- */
-  .azul.breve  { --escuro: #2b3050; --medio: #5a628f; --sombra: rgba(60, 66, 110, .2); }
-  .verde.breve { --escuro: #243d36; --medio: #55857a; --sombra: rgba(50, 90, 78, .2); }
-  .breve { cursor: default; }
-  .breve .icone, .breve .nome { opacity: .82; }
+  .rotulo { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+  .linha { font-size: 13.5px; font-weight: 600; letter-spacing: .01em; color: var(--cor); }
+  .nome { font-size: 21px; font-weight: 700; letter-spacing: -.01em; line-height: 1.15; text-wrap: balance; }
+  /* ---------- Em breve: sem clique, apagado, com selo ---------- */
+  .breve { background: rgba(255, 255, 255, .84); border-style: dashed; box-shadow: none; cursor: default; }
+  .breve .icone { background: #b3aea6; }
+  .breve .linha, .breve .nome { color: var(--texto-suave); }
   .selo {
-    position: absolute; top: 9px; right: 11px; z-index: 2;
-    padding: 3px 10px; border-radius: 999px;
-    font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase;
-    color: #3a2a05; background: linear-gradient(135deg, var(--ouro-claro), var(--ouro));
-    box-shadow: 0 1px 3px rgba(0, 0, 0, .3);
+    position: absolute; top: 9px; right: 10px;
+    padding: 2px 8px; border: 1px solid #cdc7be; border-radius: 999px; background: #fff;
+    font-size: 10.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--texto-suave);
   }
   footer { text-align: center; font-size: 13px; padding: 0 16px 20px; color: var(--texto-suave); }
 
   @media (max-width: 560px) {
-    header { padding-top: 76px; }
-    .simbolo { width: 104px; height: 104px; }
-    .grade { gap: 12px; }
-    .botao { min-height: 96px; }
-    .icone { width: 64px; height: 64px; }
-    .icone svg { width: 38px; height: 38px; }
-    .nome { font-size: 25px; }
-    .nome.longo { font-size: 22px; }
+    header { padding-top: 80px; }
+    .simbolo { width: 68px; height: 68px; margin-bottom: 14px; }
+    .grade { gap: 10px; }
+    .botao { min-height: 84px; }
+    .icone { width: 60px; height: 60px; }
+    .icone svg { width: 34px; height: 34px; }
+    .nome { font-size: 19.5px; }
+    .botao.porta { flex-direction: row; }
+    .porta .topo { width: 104px; height: auto; flex: none; }
+    .porta .topo svg { width: 56px; height: 56px; }
+    .porta .rotulo { padding: 14px 16px; }
+    .porta .nome { font-size: 20px; }
+    .porta .linha { font-size: 14.5px; }
+    .porta .abrir { display: none; }
   }
   @media (prefers-reduced-motion: reduce) { .botao { transition: none; } }
 </style>
@@ -147,33 +120,25 @@
 <body>
 <a class="voltar" href="../geral/">← Menu geral</a>
 <header>
-  <!-- Símbolo provisório em código. Com a arte pronta, troque este <svg> por:
-       <img class="simbolo" src="assets/simbolo.webp" width="512" height="512" alt=""> -->
-  <svg class="simbolo" viewBox="0 0 120 120" aria-hidden="true">
-    <defs><linearGradient id="ouro" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f6dc9a"/><stop offset=".5" stop-color="#a87722"/><stop offset="1" stop-color="#f6dc9a"/></linearGradient><linearGradient id="cor" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2f45b8"/><stop offset="1" stop-color="#111a55"/></linearGradient></defs>
-    <rect x="24" y="24" width="72" height="72" rx="17" fill="url(#cor)" stroke="url(#ouro)" stroke-width="5" transform="rotate(-8 60 60)"/>
-    <g fill="#f6dc9a" transform="rotate(-8 60 60)"><circle cx="44" cy="44" r="6"/><circle cx="76" cy="44" r="6"/><circle cx="60" cy="60" r="6"/><circle cx="44" cy="76" r="6"/><circle cx="76" cy="76" r="6"/></g>
-    <ellipse cx="60" cy="60" rx="55" ry="16" fill="none" stroke="url(#ouro)" stroke-width="3" transform="rotate(-24 60 60)"/>
-    <circle cx="109" cy="37" r="5" fill="#d4a24c"/>
-  </svg>
+  <svg class="simbolo" viewBox="0 0 96 96" aria-hidden="true"><rect x="2" y="2" width="92" height="92" rx="20" fill="#23346b"/><g transform="translate(48 49) scale(.74) translate(-48 -50)"><path d="M48 10L82.6 30 48 50 13.4 30z" fill="#b0904f" fill-opacity=".3"/><path d="M13.4 30L48 50v40L13.4 70z" fill="#ffffff" fill-opacity=".12"/><path d="M48 10L82.6 30v40L48 90 13.4 70V30zM13.4 30L48 50l34.6-20M48 50v40" fill="none" stroke="#ffffff" stroke-width="3.4" stroke-linejoin="round"/><g fill="#ffffff"><ellipse cx="48" cy="30" rx="6" ry="3.6"/><circle cx="24.9" cy="50" r="3.6"/><circle cx="36.5" cy="70" r="3.6"/><circle cx="56.7" cy="55" r="3.6"/><circle cx="65.3" cy="60" r="3.6"/><circle cx="74" cy="65" r="3.6"/></g><g fill="#b0904f"><circle cx="48" cy="10" r="4.6"/><circle cx="82.6" cy="30" r="4.6"/><circle cx="82.6" cy="70" r="4.6"/><circle cx="48" cy="90" r="4.6"/><circle cx="13.4" cy="70" r="4.6"/><circle cx="13.4" cy="30" r="4.6"/><circle cx="48" cy="50" r="5"/></g></g></svg>
   <h1>Jogar e aprender</h1>
   <p class="chamada">Jogos e modelos de ciência. Abrem direto no navegador.</p>
 </header>
 <main>
   <nav aria-label="Jogos">
     <ul class="grade">
-      <li><a class="botao azul" href="../fa-manager/" target="_blank" rel="noopener" aria-label="FA Manager: jogo de gerenciamento de futebol americano (abre em nova aba)"><span class="icone"><svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="12" rx="9.4" ry="5.6" transform="rotate(-38 12 12)"/><path d="M9.2 14.8l5.6-5.6M10 12.4l1.6 1.6M11.6 10.8l1.6 1.6M13.2 9.2l.8.8"/></svg></span><span class="traco"></span><span class="rotulo"><span class="linha">Futebol americano</span><span class="nome">FA Manager</span></span></a></li>
-      <li><a class="botao azul" href="../torres-do-reino/" target="_blank" rel="noopener" aria-label="Torres do Reino: jogo de defesa de torres (abre em nova aba)"><span class="icone"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h2.4v2h2.2V4h2.8v2h2.2V4H18v5l-1.5 1.5V21h-9V10.5L6 9z"/><path d="M10.5 21v-3.6a1.5 1.5 0 0 1 3 0V21"/></svg></span><span class="traco"></span><span class="rotulo"><span class="linha">Defesa de torres</span><span class="nome">Torres do Reino</span></span></a></li>
-      <li><a class="botao azul" href="../quadra/" target="_blank" rel="noopener" aria-label="Quadra: jogo diário de grupos de palavras (abre em nova aba)"><span class="icone"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.8"/><rect class="cheio" x="13" y="4" width="7" height="7" rx="1.8"/><rect class="cheio" x="4" y="13" width="7" height="7" rx="1.8"/><rect x="13" y="13" width="7" height="7" rx="1.8"/></svg></span><span class="traco"></span><span class="rotulo"><span class="linha">Palavras do dia</span><span class="nome">Quadra</span></span></a></li>
-      <li><a class="botao azul" href="../orbitas/" target="_blank" rel="noopener" aria-label="Órbitas: modelo 3D do sistema solar (abre em nova aba)"><span class="icone"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><ellipse cx="12" cy="12" rx="10.2" ry="3.7" transform="rotate(-22 12 12)"/><circle class="cheio" cx="20" cy="6.4" r="1.2"/></svg></span><span class="traco"></span><span class="rotulo"><span class="linha">Sistema solar em 3D</span><span class="nome">Órbitas</span></span></a></li>
+      <li><a class="botao azul" href="../fa-manager/" target="_blank" rel="noopener" aria-label="FA Manager: jogo de gerenciamento de futebol americano (abre em nova aba)"><span class="icone"><svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="12" rx="9.4" ry="5.6" transform="rotate(-38 12 12)"/><path d="M9.2 14.8l5.6-5.6M10 12.4l1.6 1.6M11.6 10.8l1.6 1.6M13.2 9.2l.8.8"/></svg></span><span class="rotulo"><span class="linha">Futebol americano</span><span class="nome">FA Manager</span></span></a></li>
+      <li><a class="botao azul" href="../torres-do-reino/" target="_blank" rel="noopener" aria-label="Torres do Reino: jogo de defesa de torres (abre em nova aba)"><span class="icone"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h2.4v2h2.2V4h2.8v2h2.2V4H18v5l-1.5 1.5V21h-9V10.5L6 9z"/><path d="M10.5 21v-3.6a1.5 1.5 0 0 1 3 0V21"/></svg></span><span class="rotulo"><span class="linha">Defesa de torres</span><span class="nome">Torres do Reino</span></span></a></li>
+      <li><a class="botao azul" href="../quadra/" target="_blank" rel="noopener" aria-label="Quadra: jogo diário de grupos de palavras (abre em nova aba)"><span class="icone"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.8"/><rect class="cheio" x="13" y="4" width="7" height="7" rx="1.8"/><rect class="cheio" x="4" y="13" width="7" height="7" rx="1.8"/><rect x="13" y="13" width="7" height="7" rx="1.8"/></svg></span><span class="rotulo"><span class="linha">Palavras do dia</span><span class="nome">Quadra</span></span></a></li>
+      <li><a class="botao azul" href="../orbitas/" target="_blank" rel="noopener" aria-label="Órbitas: modelo 3D do sistema solar (abre em nova aba)"><span class="icone"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><ellipse cx="12" cy="12" rx="10.2" ry="3.7" transform="rotate(-22 12 12)"/><circle class="cheio" cx="20" cy="6.4" r="1.2"/></svg></span><span class="rotulo"><span class="linha">Sistema solar em 3D</span><span class="nome">Órbitas</span></span></a></li>
+      <li><a class="botao azul" href="https://mestre-rachess.web.app/" target="_blank" rel="noopener" aria-label="Rachess: xadrez com análise das jogadas (abre em nova aba)"><span class="icone"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="6.4" r="2.9"/><path d="M9.6 9.6h4.8M10.4 9.6c-.2 3.6-1.3 6-3 8.2h9.2c-1.7-2.2-2.8-4.6-3-8.2M6.5 20.6h11v-2.8h-11z"/></svg></span><span class="rotulo"><span class="linha">Xadrez</span><span class="nome">Rachess</span></span></a></li>
       <!-- Em breve: botões sem clique. Quando o projeto for publicado, troque a linha por uma igual às de cima -->
-      <li><div class="botao azul breve"><span class="icone"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="6.4" r="2.9"/><path d="M9.6 9.6h4.8M10.4 9.6c-.2 3.6-1.3 6-3 8.2h9.2c-1.7-2.2-2.8-4.6-3-8.2M6.5 20.6h11v-2.8h-11z"/></svg></span><span class="traco"></span><span class="rotulo"><span class="linha">Xadrez</span><span class="nome">Rachess</span></span><span class="selo">Em breve</span></div></li>
-      <li><div class="botao azul breve"><span class="icone"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 3.5h5M10.5 3.5V9l-5 9a2 2 0 0 0 1.8 3h9.4a2 2 0 0 0 1.8-3l-5-9V3.5M7.8 15h8.4"/></svg></span><span class="traco"></span><span class="rotulo"><span class="linha">Física</span><span class="nome">Bancada</span></span><span class="selo">Em breve</span></div></li>
-      <li><div class="botao azul breve"><span class="icone"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 20.5h17M3.5 10L12 4l8.5 6zM6 20.5V10M18 20.5V10M10 20.5v-7M14 20.5v-7"/></svg></span><span class="traco"></span><span class="rotulo"><span class="linha">Simulador de</span><span class="nome longo">Gestão Municipal</span></span><span class="selo">Em breve</span></div></li>
-      <li><div class="botao azul breve"><span class="icone"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 3l-4.5 8h9zM7.5 11L12 21l4.5-10M4 7.5L7.5 11M20 7.5L16.5 11"/></svg></span><span class="traco"></span><span class="rotulo"><span class="linha">Online</span><span class="nome">RPG de Mesa</span></span><span class="selo">Em breve</span></div></li>
-      <li><div class="botao azul breve"><span class="icone"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 21V4M6.5 5h10.5l-2.6 3.5L17 12H6.5M3.5 21h17"/></svg></span><span class="traco"></span><span class="rotulo"><span class="linha">Estratégia</span><span class="nome">Colônia</span></span><span class="selo">Em breve</span></div></li>
-      <li><div class="botao azul breve"><span class="icone"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 9.5L12 5l9.5 4.5L12 14z"/><path d="M6.5 11.6V16c1.5 1.5 3.5 2.2 5.5 2.2s4-.7 5.5-2.2v-4.4M21.5 9.5V15"/></svg></span><span class="traco"></span><span class="rotulo"><span class="linha">Aulas</span><span class="nome">Gamificadas</span></span><span class="selo">Em breve</span></div></li>
-      <li><div class="botao azul breve"><span class="icone"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7.5" y="7.5" width="13" height="10" rx="2"/><path d="M4 14.5V6a2 2 0 0 1 2-2h10.5M10.7 11.2h6.6M10.7 14h3.5"/></svg></span><span class="traco"></span><span class="rotulo"><span class="linha">Cartões de</span><span class="nome">Estudo com IA</span></span><span class="selo">Em breve</span></div></li>
+      <li><div class="botao azul breve"><span class="icone"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 3.5h5M10.5 3.5V9l-5 9a2 2 0 0 0 1.8 3h9.4a2 2 0 0 0 1.8-3l-5-9V3.5M7.8 15h8.4"/></svg></span><span class="rotulo"><span class="linha">Física</span><span class="nome">Bancada</span></span><span class="selo">Em breve</span></div></li>
+      <li><div class="botao azul breve"><span class="icone"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 20.5h17M3.5 10L12 4l8.5 6zM6 20.5V10M18 20.5V10M10 20.5v-7M14 20.5v-7"/></svg></span><span class="rotulo"><span class="linha">Simulador de</span><span class="nome">Gestão Municipal</span></span><span class="selo">Em breve</span></div></li>
+      <li><div class="botao azul breve"><span class="icone"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 3l-4.5 8h9zM7.5 11L12 21l4.5-10M4 7.5L7.5 11M20 7.5L16.5 11"/></svg></span><span class="rotulo"><span class="linha">Online</span><span class="nome">RPG de Mesa</span></span><span class="selo">Em breve</span></div></li>
+      <li><div class="botao azul breve"><span class="icone"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 21V4M6.5 5h10.5l-2.6 3.5L17 12H6.5M3.5 21h17"/></svg></span><span class="rotulo"><span class="linha">Estratégia</span><span class="nome">Colônia</span></span><span class="selo">Em breve</span></div></li>
+      <li><div class="botao azul breve"><span class="icone"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 9.5L12 5l9.5 4.5L12 14z"/><path d="M6.5 11.6V16c1.5 1.5 3.5 2.2 5.5 2.2s4-.7 5.5-2.2v-4.4M21.5 9.5V15"/></svg></span><span class="rotulo"><span class="linha">Aulas</span><span class="nome">Gamificadas</span></span><span class="selo">Em breve</span></div></li>
+      <li><div class="botao azul breve"><span class="icone"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7.5" y="7.5" width="13" height="10" rx="2"/><path d="M4 14.5V6a2 2 0 0 1 2-2h10.5M10.7 11.2h6.6M10.7 14h3.5"/></svg></span><span class="rotulo"><span class="linha">Cartões de</span><span class="nome">Estudo com IA</span></span><span class="selo">Em breve</span></div></li>
     </ul>
   </nav>
 </main>

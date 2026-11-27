@@ -8,8 +8,10 @@ A capa que leva a este menu fica em https://paineis-gerenciais.github.io/geral/ 
 
 ## Arquivos
 
-- `index.html` — o menu (HTML + CSS, sem JavaScript). Os botões são feitos em código, não em imagem.
-- `assets/` — criar quando a arte ficar pronta (`simbolo.webp` e `fundo.webp`). Os prompts estão em `ARTE.md`, no repositório `geral`.
+- `index.html` — o menu (HTML + CSS, sem JavaScript). Os botões e o símbolo são feitos em código, não em imagem.
+- `favicon.svg` — ícone da aba do navegador.
+- `marca/` — a marca deste menu: símbolo, assinaturas, ícones, cores e folha da marca.
+- `assets/fundo.webp` — imagem de fundo.
 
 ## Adicionar ou tirar um jogo
 
@@ -23,8 +25,10 @@ Cada botão é um `<li>` em `index.html`.
 
 Os endereços são relativos (`../quadra/`): funcionam enquanto o jogo estiver publicado na mesma conta. Para um jogo em outro endereço, use o endereço completo.
 
-## Colocar a arte
+## Imagem de fundo
 
-1. Salve as imagens em `assets/simbolo.webp` (512 px de lado) e `assets/fundo.webp` (1920 px de largura).
-2. No alto do `index.html`, troque `--fundo: none;` por `--fundo: url("assets/fundo.webp");`.
-3. Troque o bloco `<svg class="simbolo">…</svg>` pela linha `<img>` que está no comentário logo acima dele.
+O fundo é a imagem `assets/fundo.webp`, com um véu marfim por cima para não disputar com os botões. O prompt que gerou a imagem está no `ARTE.md` do repositório `geral`.
+
+- **Trocar a imagem:** salve a nova por cima de `assets/fundo.webp` (1920 px de largura, até 300 KB).
+- **Clarear ou escurecer:** no alto do `index.html`, mude o último número de `--veu`. Mais perto de `1` clareia; mais perto de `0` mostra mais a imagem.
+- **Tirar a imagem:** no alto do `index.html`, troque o valor de `--fundo` por `none`. O fundo volta ao marfim liso.
